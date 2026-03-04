@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>🎂 Sinh nhật Dương Gia Bảo - 24/05</title>
     <style>
-        /* ========== GIỮ NGUYÊN PHẦN CSS CŨ ========== */
+        /* ========== GIỮ NGUYÊN PHẦN CSS ========== */
         * {
             margin: 0;
             padding: 0;
@@ -231,7 +231,7 @@
     <canvas id="confetti-canvas"></canvas>
 
     <div class="card">
-        <!-- Ảnh của Dương Gia Bảo (link từ i.ibb.co) -->
+        <!-- Ảnh của Dương Gia Bảo -->
         <img src="https://i.ibb.co/23ByT0sb/1000183171.png" alt="Dương Gia Bảo" class="avatar" id="avatar-img">
 
         <h1>Dương Gia Bảo</h1>
@@ -275,7 +275,7 @@
 
     <script>
         (function() {
-            // ========== PHẦN NHẠC (AUTOPLAY + RANDOM THEO NGÀY) ==========
+            // ========== PHẦN NHẠC (ĐÃ BỎ AUTOPLAY) ==========
             const regularSongs = [
                 "https://github.com/baobao247/2405/raw/refs/heads/main/B%C3%A0i%20N%C3%A0y%20Chill%20Ph%E1%BA%BFt%20-%20%C4%90en.mp3",
                 "https://github.com/baobao247/2405/raw/refs/heads/main/C%E1%BB%A9%20Chill%20Th%C3%B4i%20-%20Chillies.mp3",
@@ -291,7 +291,7 @@
 
             function isBirthdayToday() {
                 const today = new Date();
-                return today.getDate() === 24 && today.getMonth() === 4; // tháng 5
+                return today.getDate() === 24 && today.getMonth() === 4;
             }
 
             function getRandomSong() {
@@ -304,19 +304,13 @@
             const musicBtn = document.getElementById('musicToggleBtn');
             let musicPlaying = false;
 
-            // Gán bài hát ngẫu nhiên và thử autoplay
+            // Gán bài hát ngẫu nhiên nhưng KHÔNG phát (bỏ autoplay)
             music.src = getRandomSong();
             music.load();
-            music.play().then(() => {
-                musicPlaying = true;
-                musicBtn.innerHTML = '<i class="fas fa-music"></i> Tắt nhạc';
-                musicBtn.classList.add('music-on');
-            }).catch(() => {
-                // Autoplay bị chặn, giữ nguyên nút "Bật nhạc"
-                musicPlaying = false;
-                musicBtn.innerHTML = '<i class="fas fa-music"></i> Bật nhạc';
-                musicBtn.classList.remove('music-on');
-            });
+
+            // Đảm bảo nút hiển thị đúng trạng thái ban đầu
+            musicBtn.innerHTML = '<i class="fas fa-music"></i> Bật nhạc';
+            musicBtn.classList.remove('music-on');
 
             musicBtn.addEventListener('click', () => {
                 if (musicPlaying) {
@@ -331,10 +325,10 @@
                 musicPlaying = !musicPlaying;
             });
 
-            // ========== PHẦN ĐẾM NGƯỢC ĐẾN 24/05 ==========
+            // ========== PHẦN ĐẾM NGƯỢC ==========
             function getNextBirthday(now) {
                 const currentYear = now.getFullYear();
-                let target = new Date(currentYear, 4, 24, 0, 0, 0); // 24/05 00:00
+                let target = new Date(currentYear, 4, 24, 0, 0, 0);
                 if (now > target) {
                     target = new Date(currentYear + 1, 4, 24, 0, 0, 0);
                 }
@@ -379,7 +373,7 @@
                 }
             }
 
-            // ========== PHẦN CONFETTI (CANVAS) ==========
+            // ========== PHẦN CONFETTI ==========
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
             let width, height;
@@ -500,9 +494,8 @@
                 }
             });
 
-            // Đảm bảo confetti bật khi tải trang
             confettiActive = true;
         })();
     </script>
 </body>
-    </html>
+        </html>
