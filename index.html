@@ -169,8 +169,6 @@ body.birthday-mode .bday-banner{display:block}
 .player button{width:40px;height:40px;border-radius:50%;border:none;background:rgba(168,85,247,.12);color:#7c3aed;cursor:pointer;display:grid;place-items:center;font-size:14px;transition:all .2s;flex-shrink:0}
 .player button:hover{background:var(--purple);color:#fff;transform:scale(1.08)}
 .player button.play{width:48px;height:48px;font-size:16px;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;box-shadow:0 10px 20px -6px rgba(168,85,247,.6)}
-.player button.play.loading{pointer-events:none;opacity:.9}
-.player button.play.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
 .player-info{flex:1;min-width:150px;display:flex;flex-direction:column;gap:6px}
 .song-title{font-size:.85rem;font-weight:600;color:#4c1d95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .seek{height:6px;background:rgba(168,85,247,.18);border-radius:999px;position:relative;cursor:pointer}
@@ -300,8 +298,8 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   </footer>
 </main>
 
-<!-- KHÔNG còn crossorigin, KHÔNG autoplay, preload nhẹ -->
-<audio id="bgAudio" preload="metadata" playsinline webkit-playsinline></audio>
+<!-- Audio: preload none, KHÔNG crossorigin, KHÔNG autoplay -->
+<audio id="bgAudio" preload="none" playsinline webkit-playsinline></audio>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -616,164 +614,73 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   $('wishText').addEventListener('keydown', e => { if (e.key === 'Enter') $('wishSend').click(); });
   renderWishes();
 
-  /* ================== MUSIC PLAYER (FIXED) ================== */
+  /* ================== MUSIC PLAYER (ĐƠN GIẢN — CHẮC CHẠY) ================== */
   const audio = $('bgAudio');
   let songs = (isBirthdayToday() ? BIRTHDAY_SONGS : REGULAR_SONGS).slice();
-  let currentIdx = Math.floor(Math.random() * songs.length);
+  let currentIdx = 0;
   let shuffle = false;
   let userVolume = parseFloat(localStorage.getItem('dgb_volume'));
   if (isNaN(userVolume) || userVolume < 0 || userVolume > 1) userVolume = 0.7;
   audio.volume = userVolume;
   $('volSlider').value = userVolume;
 
-  // Warm-up bài kế: dùng Audio() riêng biệt, KHÔNG có crossorigin
-  let warmupAudio = null;
-  let warmupDone = false;
-
-  function warmupNext(){
-    try {
-      if (warmupAudio) { warmupAudio.src = ''; warmupAudio.load(); }
-      const nextIdx = (currentIdx + 1) % songs.length;
-      const url = songs[nextIdx] && songs[nextIdx].url;
-      if (!url) return;
-      warmupAudio = new Audio();
-      warmupAudio.preload = 'auto';
-      // KHÔNG set crossorigin — tránh CORS mode conflict
-      warmupAudio.src = url;
-      // Không cần .load() — set src là đủ
-    } catch(e){ /* silent */ }
+  function updatePlayIcon(){
+    $('playBtn').innerHTML = audio.paused
+      ? '<i class="fas fa-play"></i>'
+      : '<i class="fas fa-pause"></i>';
   }
-
-  function setPlayState(state){
-    // state: 'play' | 'pause' | 'loading' | 'error'
-    const btn = $('playBtn');
-    btn.classList.toggle('loading', state === 'loading');
-    btn.classList.toggle('error', state === 'error');
-    if (state === 'loading') btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    else if (state === 'error') btn.innerHTML = '<i class="fas fa-triangle-exclamation"></i>';
-    else if (state === 'play') btn.innerHTML = '<i class="fas fa-pause"></i>';
-    else btn.innerHTML = '<i class="fas fa-play"></i>';
-  }
-
-  let loadingTimer = null;
-  function beginLoading(){
-    clearTimeout(loadingTimer);
-    setPlayState('loading');
-    // Fallback: nếu 8s không có tín hiệu gì, thoát khỏi loading
-    loadingTimer = setTimeout(() => {
-      if (!audio.paused) setPlayState('play');
-      else setPlayState('pause');
-    }, 8000);
-  }
-  function endLoading(){
-    clearTimeout(loadingTimer);
-    if (audio.paused) setPlayState('pause');
-    else setPlayState('play');
-  }
-
-  function loadSong(idx, autoplay){
-    currentIdx = ((idx % songs.length) + songs.length) % songs.length;
-    const song = songs[currentIdx];
-
-    $('seekFill').style.width = '0%';
+  function setSongInfo(song){
+    $('songTitle').textContent = song.title;
     $('curTime').textContent = '0:00';
     $('durTime').textContent = '0:00';
-    $('songTitle').textContent = song.title;
-
-    warmupDone = false;
-
+    $('seekFill').style.width = '0%';
+  }
+  function loadSong(idx, shouldPlay){
+    currentIdx = ((idx % songs.length) + songs.length) % songs.length;
+    const song = songs[currentIdx];
+    setSongInfo(song);
     audio.src = song.url;
-    // KHÔNG gọi audio.load() — chỉ set src là đủ và an toàn hơn
-    // (audio.load() có thể abort stream đang có)
-
-    if (autoplay){
-      beginLoading();
+    if (shouldPlay){
       const p = audio.play();
       if (p && p.catch){
         p.catch(err => {
-          if (err.name === 'AbortError') return;           // do load khác
-          if (err.name === 'NotAllowedError'){             // autoplay policy
-            setPlayState('pause');
-            toast('Nhấn ▶ để bắt đầu phát nhạc');
-            return;
+          if (err.name === 'NotAllowedError'){ updatePlayIcon(); return; }
+          console.warn('Play failed:', err.name, err.message);
+          if (songs.length > 1){
+            toast('Bài lỗi, chuyển bài khác...');
+            setTimeout(() => loadSong(currentIdx + 1, true), 1000);
           }
-          console.warn('[play error]', err.name, err.message);
-          setPlayState('error');
-          toast('Không phát được, chuyển bài khác...');
-          setTimeout(() => { if (songs.length > 1) loadSong(currentIdx + 1, true); }, 900);
         });
       }
-    } else {
-      setPlayState('pause');
     }
   }
 
-  /* ---- Audio events ---- */
-  audio.addEventListener('loadstart', beginLoading);
-  audio.addEventListener('waiting',   beginLoading);
-  audio.addEventListener('stalled',   beginLoading);
-
-  audio.addEventListener('canplay',        endLoading);
-  audio.addEventListener('canplaythrough', endLoading);
-  audio.addEventListener('playing', () => {
-    endLoading();
-    // Warm-up bài kế 5s sau khi bài hiện tại đã chạy ổn
-    if (!warmupDone){
-      warmupDone = true;
-      setTimeout(warmupNext, 5000);
-    }
-  });
-
-  audio.addEventListener('play',  () => setPlayState('play'));
-  audio.addEventListener('pause', () => setPlayState('pause'));
+  audio.addEventListener('play',  updatePlayIcon);
+  audio.addEventListener('pause', updatePlayIcon);
   audio.addEventListener('ended', () => {
-    if (shuffle) loadSong(Math.floor(Math.random() * songs.length), true);
-    else loadSong(currentIdx + 1, true);
+    const next = shuffle ? Math.floor(Math.random() * songs.length) : currentIdx + 1;
+    loadSong(next, true);
+  });
+  audio.addEventListener('error', () => {
+    console.warn('Audio error, skipping...');
+    if (songs.length > 1) setTimeout(() => loadSong(currentIdx + 1, true), 800);
   });
   audio.addEventListener('loadedmetadata', () => {
     $('durTime').textContent = fmtTime(audio.duration);
   });
-  audio.addEventListener('error', () => {
-    const e = audio.error;
-    console.warn('[audio error]', e && e.code, e && e.message);
-    clearTimeout(loadingTimer);
-    setPlayState('error');
-    toast('Lỗi tải bài, chuyển bài khác...');
-    setTimeout(() => {
-      if (songs.length > 1) loadSong(currentIdx + 1, true);
-      else setPlayState('pause');
-    }, 900);
-  });
-
-  /* Throttle timeupdate bằng RAF */
-  let seekRaf = null;
   audio.addEventListener('timeupdate', () => {
-    if (seekRaf) return;
-    seekRaf = requestAnimationFrame(() => {
-      seekRaf = null;
-      $('curTime').textContent = fmtTime(audio.currentTime);
-      if (audio.duration){
-        $('seekFill').style.width = ((audio.currentTime / audio.duration) * 100) + '%';
-      }
-    });
+    $('curTime').textContent = fmtTime(audio.currentTime);
+    if (audio.duration){
+      $('seekFill').style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+    }
   });
 
-  /* ---- Controls ---- */
   $('playBtn').addEventListener('click', () => {
     if (audio.paused){
-      if (!audio.src){
-        loadSong(currentIdx, true);
-        return;
-      }
-      beginLoading();
-      const p = audio.play();
-      if (p && p.catch) p.catch(err => {
-        if (err.name === 'NotAllowedError'){
-          endLoading();
-          return;
-        }
-        endLoading();
-        console.warn('[play error]', err);
+      if (!audio.src){ loadSong(currentIdx, true); return; }
+      audio.play().catch(err => {
+        if (err.name !== 'NotAllowedError') console.warn(err);
+        updatePlayIcon();
       });
     } else {
       audio.pause();
@@ -791,19 +698,15 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     const b = $('shuffleBtn');
     b.style.background = shuffle ? 'linear-gradient(135deg,#ec4899,#8b5cf6)' : '';
     b.style.color = shuffle ? '#fff' : '';
-    toast(shuffle ? 'Bật phát ngẫu nhiên 🔀' : 'Tắt phát ngẫu nhiên');
+    toast(shuffle ? 'Phát ngẫu nhiên: BẬT 🔀' : 'Phát ngẫu nhiên: TẮT');
   });
 
-  /* Seek */
-  const seekBar = $('seekBar');
-  function doSeek(clientX){
-    const rect = seekBar.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  $('seekBar').addEventListener('click', e => {
+    const rect = $('seekBar').getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     if (audio.duration && isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
-  }
-  seekBar.addEventListener('click', e => doSeek(e.clientX));
+  });
 
-  /* Volume */
   $('volSlider').addEventListener('input', e => {
     userVolume = parseFloat(e.target.value);
     audio.volume = userVolume;
@@ -827,8 +730,16 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     }
   });
 
-  /* Load metadata ban đầu — chỉ load metadata, chưa phát */
-  loadSong(currentIdx, false);
+  $('musicBirthdayBtn').addEventListener('click', () => {
+    songs = BIRTHDAY_SONGS.slice();
+    currentIdx = 0;
+    loadSong(0, true);
+    toast('Đang phát nhạc sinh nhật 🎂');
+  });
+
+  // Khởi tạo: hiển thị tên bài đầu, chưa phát
+  setSongInfo(songs[currentIdx]);
+  audio.src = songs[currentIdx].url;
 
   /* ================== ACTION BUTTONS ================== */
   $('confettiBtn').addEventListener('click', () => {
@@ -846,7 +757,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     }
     beep(confettiOn ? 880 : 440, 0.08);
   });
-
   $('burstBtn').addEventListener('click', () => {
     const cx = W / 2, cy = H / 2;
     for (let i = 0; i < 3; i++){
@@ -856,14 +766,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       }, i * 140);
     }
     toast('Bắn pháo hoa! 🎆');
-  });
-
-  $('musicBirthdayBtn').addEventListener('click', () => {
-    const wasPlaying = !audio.paused;
-    songs = BIRTHDAY_SONGS.slice();
-    currentIdx = 0;
-    loadSong(0, wasPlaying || true);
-    toast('Đang phát nhạc sinh nhật 🎂');
   });
 
   /* ================== TOP ACTIONS ================== */
@@ -928,7 +830,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
 
   window.addEventListener('pagehide', () => {
     if (countdownInterval) clearInterval(countdownInterval);
-    if (warmupAudio){ try { warmupAudio.src = ''; } catch(e){} warmupAudio = null; }
   });
 
   const onResize = debounce(() => {
