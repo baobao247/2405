@@ -10,42 +10,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
 :root{
-  --pink:#ec4899;--pink-2:#f472b6;--purple:#8b5cf6;--purple-2:#a855f7;
-  --gold:#fbbf24;--blue:#60a5fa;
+  --pink:#ec4899;--pink-2:#f472b6;--purple:#8b5cf6;--gold:#fbbf24;--blue:#60a5fa;
   --text:#1f2937;--text-muted:#6b7280;
   --glass:rgba(255,255,255,.72);--glass-border:rgba(255,255,255,.55);
   --shadow:0 30px 60px -20px rgba(80,20,80,.35);
 }
 body.birthday-mode{--pink:#f43f5e;--purple:#c026d3;--gold:#facc15}
-
 *{-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
 html,body{min-height:100%}
-
 body{
-  font-family:'Poppins',system-ui,sans-serif;
-  color:var(--text);
-  min-height:100vh;
-  min-height:100dvh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  /* padding-top dự trù cho avatar trồi lên (128px) + buffer */
-  padding:130px 16px 60px;
-  overflow-x:hidden;
+  font-family:'Poppins',system-ui,sans-serif;color:var(--text);
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:130px 16px 60px;overflow-x:hidden;
   background:linear-gradient(140deg,#667eea,#764ba2 45%,#ec4899 100%);
   background-size:300% 300%;
   animation:bgShift 18s ease infinite;
 }
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-body.birthday-mode{
-  background:linear-gradient(140deg,#f472b6,#a855f7 45%,#fbbf24 100%);
-  background-size:300% 300%;
-}
+body.birthday-mode{background:linear-gradient(140deg,#f472b6,#a855f7 45%,#fbbf24 100%);background-size:300% 300%}
 
-/* orbs */
 .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:orbFloat 20s ease-in-out infinite}
 .orb.a{width:340px;height:340px;background:#f472b6;top:-80px;left:-80px}
@@ -53,14 +38,10 @@ body.birthday-mode{
 .orb.c{width:260px;height:260px;background:#fbbf24;top:40%;right:20%;animation-delay:-12s}
 @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.1)}}
 
-/* balloons */
 .balloons{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
 .balloon{
-  position:absolute;width:42px;height:56px;
-  border-radius:50% 50% 48% 48%;
-  left:var(--x);
-  animation:floatUp var(--dur) linear infinite;
-  animation-delay:var(--delay);
+  position:absolute;width:42px;height:56px;border-radius:50% 50% 48% 48%;left:var(--x);
+  animation:floatUp var(--dur) linear infinite;animation-delay:var(--delay);
   filter:drop-shadow(0 8px 12px rgba(0,0,0,.15));
 }
 .balloon::before{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:2px;height:8px;background:rgba(0,0,0,.25);border-radius:2px}
@@ -69,35 +50,26 @@ body.birthday-mode{
 
 #confetti-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
 
-/* CARD — margin auto để căn giữa nhưng không cắt khi content cao */
 .card{
-  position:relative;z-index:20;
-  width:100%;max-width:720px;
-  margin:auto 0;                      /* key fix: centers vertically + allows overflow */
-  background:var(--glass);
-  border:1.5px solid var(--glass-border);
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
-  border-radius:36px;
-  padding:56px 26px 30px;
+  position:relative;z-index:20;width:100%;max-width:720px;margin:auto 0;
+  background:var(--glass);border:1.5px solid var(--glass-border);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-radius:36px;padding:56px 26px 30px;
   box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.6);
-  text-align:center;
-  animation:cardIn 1s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;animation:cardIn 1s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes cardIn{from{opacity:0;transform:scale(.9) translateY(30px)}to{opacity:1;transform:none}}
 
 .top-controls{position:absolute;top:16px;right:18px;display:flex;gap:8px;z-index:5}
 .icon-btn{
   width:38px;height:38px;border-radius:50%;
-  background:rgba(255,255,255,.7);
-  border:1.5px solid rgba(255,255,255,.7);
-  color:#4c1d95;cursor:pointer;
-  display:grid;place-items:center;font-size:14px;
+  background:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.7);
+  color:#4c1d95;cursor:pointer;display:grid;place-items:center;font-size:14px;
   transition:all .25s;backdrop-filter:blur(10px);
 }
 .icon-btn:hover{transform:translateY(-2px) rotate(8deg);background:#fff;color:var(--pink)}
+.icon-btn.off{opacity:.5}
 
-/* avatar */
 .avatar-wrap{position:relative;width:150px;height:150px;margin:-128px auto 16px}
 .avatar-wrap::before{
   content:'';position:absolute;inset:-10px;border-radius:50%;
@@ -109,48 +81,37 @@ body.birthday-mode{
 .avatar-wrap:hover .avatar{transform:scale(1.06) rotate(3deg)}
 
 h1{
-  font-family:'Dancing Script',cursive;
-  font-size:3.4rem;font-weight:700;
+  font-family:'Dancing Script',cursive;font-size:3.4rem;font-weight:700;
   background:linear-gradient(135deg,var(--pink),var(--purple),var(--gold));
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   line-height:1.05;margin-bottom:6px;
 }
 .sub{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 22px;border-radius:999px;
-  background:rgba(255,255,255,.65);
-  border:1.5px solid rgba(255,255,255,.8);
+  display:inline-flex;align-items:center;gap:8px;padding:8px 22px;border-radius:999px;
+  background:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.8);
   color:var(--pink);font-weight:700;font-size:1rem;letter-spacing:1px;
-  box-shadow:0 6px 16px -6px rgba(236,72,153,.4);
-  margin-bottom:24px;
+  box-shadow:0 6px 16px -6px rgba(236,72,153,.4);margin-bottom:24px;
 }
-
 .bday-banner{
   display:none;margin:0 0 20px;padding:14px 20px;border-radius:18px;
-  background:linear-gradient(135deg,#fbbf24,#f59e0b);
-  color:#fff;font-weight:700;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;font-weight:700;
   box-shadow:0 10px 25px -8px rgba(245,158,11,.6);
   animation:pulseBanner 1.6s ease-in-out infinite;
 }
 body.birthday-mode .bday-banner{display:block}
 @keyframes pulseBanner{50%{transform:scale(1.02)}}
 
-/* countdown */
 .countdown{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:8px 0 18px}
 .time-block{
-  background:linear-gradient(145deg,#ec4899,#a855f7);
-  color:#fff;padding:14px 10px;border-radius:22px;min-width:92px;
+  background:linear-gradient(145deg,#ec4899,#a855f7);color:#fff;
+  padding:14px 10px;border-radius:22px;min-width:92px;
   border:2px solid rgba(255,255,255,.35);
   box-shadow:0 15px 30px -12px rgba(168,85,247,.55),inset 0 -3px 6px rgba(0,0,0,.1);
   transition:transform .3s;position:relative;overflow:hidden;
 }
 .time-block::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.18),transparent);pointer-events:none}
 .time-block:hover{transform:translateY(-6px) scale(1.03)}
-.time-block .num{
-  display:block;font-size:2.8rem;font-weight:800;line-height:1;
-  text-shadow:0 2px 0 rgba(0,0,0,.15);font-variant-numeric:tabular-nums;
-}
+.time-block .num{display:block;font-size:2.8rem;font-weight:800;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.15);font-variant-numeric:tabular-nums}
 .time-block .num.flip{animation:flipNum .5s ease}
 @keyframes flipNum{0%{transform:rotateX(-90deg) scale(.6);opacity:0}100%{transform:rotateX(0) scale(1);opacity:1}}
 .time-block .lbl{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:2px;font-weight:600;opacity:.9;margin-top:6px}
@@ -170,8 +131,7 @@ body.birthday-mode .bday-banner{display:block}
   background:rgba(255,255,255,.6);border:2px dashed var(--pink-2);
   border-radius:22px;padding:18px 22px;margin:14px 0 22px;
   font-size:1.08rem;font-weight:500;color:#4c1d95;min-height:70px;
-  display:grid;place-items:center;
-  box-shadow:inset 0 0 20px rgba(236,72,153,.12);
+  display:grid;place-items:center;box-shadow:inset 0 0 20px rgba(236,72,153,.12);
 }
 .greeting.big{
   background:linear-gradient(135deg,#ffe4f1,#fce7f3);
@@ -205,12 +165,12 @@ body.birthday-mode .bday-banner{display:block}
 .wish-item b{color:#7c3aed}
 .wish-empty{font-size:.82rem;color:var(--text-muted);text-align:center;padding:8px}
 
-/* player */
 .player{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:20px 0 16px;background:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.8);border-radius:22px;box-shadow:0 12px 25px -12px rgba(139,92,246,.35);flex-wrap:wrap}
 .player button{width:40px;height:40px;border-radius:50%;border:none;background:rgba(168,85,247,.12);color:#7c3aed;cursor:pointer;display:grid;place-items:center;font-size:14px;transition:all .2s;flex-shrink:0}
 .player button:hover{background:var(--purple);color:#fff;transform:scale(1.08)}
 .player button.play{width:48px;height:48px;font-size:16px;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;box-shadow:0 10px 20px -6px rgba(168,85,247,.6)}
-.player button.play.loading{pointer-events:none;opacity:.85}
+.player button.play.loading{pointer-events:none;opacity:.9}
+.player button.play.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
 .player-info{flex:1;min-width:150px;display:flex;flex-direction:column;gap:6px}
 .song-title{font-size:.85rem;font-weight:600;color:#4c1d95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .seek{height:6px;background:rgba(168,85,247,.18);border-radius:999px;position:relative;cursor:pointer}
@@ -231,10 +191,9 @@ footer{margin-top:22px;font-size:.82rem;color:#6b7280;display:flex;align-items:c
 footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
 @keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,15,50,.92);color:#fff;padding:12px 24px;border-radius:999px;font-size:.88rem;font-weight:600;box-shadow:0 20px 40px -10px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:all .3s;z-index:100}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,15,50,.92);color:#fff;padding:12px 24px;border-radius:999px;font-size:.88rem;font-weight:600;box-shadow:0 20px 40px -10px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:all .3s;z-index:100;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ============ RESPONSIVE ============ */
 @media (max-width:520px){
   body{padding:105px 14px 50px}
   .card{padding:46px 16px 22px;border-radius:28px}
@@ -341,7 +300,8 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   </footer>
 </main>
 
-<audio id="bgAudio" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></audio>
+<!-- KHÔNG còn crossorigin, KHÔNG autoplay, preload nhẹ -->
+<audio id="bgAudio" preload="metadata" playsinline webkit-playsinline></audio>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -379,6 +339,7 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     return `${m}:${pad(ss)}`;
   };
   const escapeHtml = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const debounce = (fn, ms) => { let t; return function(...a){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,a), ms); }; };
 
   function toast(msg){
     const t = $('toast');
@@ -386,6 +347,26 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     t.classList.add('show');
     clearTimeout(t._timer);
     t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  /* ================== SFX (Web Audio) ================== */
+  let sfxOn = true;
+  let audioCtx = null;
+  function beep(freq, dur, type){
+    if (!sfxOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type || 'sine';
+      o.frequency.value = freq;
+      g.gain.value = 0.06;
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.08));
+      o.connect(g).connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + (dur || 0.08));
+    } catch(e){}
   }
 
   /* ================== BIRTHDAY MODE ================== */
@@ -413,7 +394,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   let W, H, particles = [], rafId = null, confettiOn = true;
 
   function resizeCanvas(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-
   const SHAPES = ['rect','circle','heart','star','ribbon'];
 
   function makeParticle(x, y, burst){
@@ -432,7 +412,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       wobbleSpd: rand(0.02, 0.06)
     };
   }
-
   function initParticles(count){ particles = []; for (let i = 0; i < count; i++) particles.push(makeParticle()); }
 
   function drawHeart(p){
@@ -481,11 +460,9 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       ctx.shadowColor = 'rgba(0,0,0,.15)';
       ctx.shadowBlur = 6;
 
-      if (p.shape === 'rect'){
-        ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-      } else if (p.shape === 'circle'){
-        ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill();
-      } else if (p.shape === 'heart') drawHeart(p);
+      if (p.shape === 'rect') ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      else if (p.shape === 'circle'){ ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill(); }
+      else if (p.shape === 'heart') drawHeart(p);
       else if (p.shape === 'star') drawStar(p);
       else if (p.shape === 'ribbon'){
         ctx.beginPath();
@@ -498,7 +475,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     }
     rafId = requestAnimationFrame(stepParticles);
   }
-
   function startConfetti(){ if (!rafId) rafId = requestAnimationFrame(stepParticles); }
   function stopConfetti(){ if (rafId){ cancelAnimationFrame(rafId); rafId = null; } ctx.clearRect(0, 0, W, H); }
   function burstAt(x, y, n){ for (let i = 0; i < (n || 40); i++) particles.push(makeParticle(x, y, true)); if (!rafId) startConfetti(); }
@@ -524,7 +500,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     void el.offsetWidth;
     el.classList.add('flip');
   }
-
   function updateCountdown(){
     const now = new Date();
     const target = getNextBirthday(now);
@@ -539,7 +514,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       $('progressLabelLeft').textContent = '🎉 Đến ngày rồi!';
       return;
     }
-
     const secs = Math.floor(diff / 1000);
     const d = Math.floor(secs / 86400);
     const h = Math.floor((secs % 86400) / 3600);
@@ -574,8 +548,6 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       g.dataset.typed = '1';
     }
   }
-
-  /* ================== TYPEWRITER ================== */
   function typewriter(el, text, speed){
     speed = speed || 45;
     el.textContent = '';
@@ -607,6 +579,8 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     giftMsg.textContent = GIFTS[giftIndex % GIFTS.length];
     giftMsg.classList.add('show');
     giftIndex++;
+    beep(880, 0.1, 'triangle');
+    setTimeout(() => beep(1175, 0.12, 'triangle'), 100);
     const rect = gift.getBoundingClientRect();
     burstAt(rect.left + rect.width / 2, rect.top + rect.height / 2, 60);
     $('giftHint').textContent = 'Bấm lại để nhận điều bất ngờ khác ✨';
@@ -634,66 +608,71 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     textEl.value = '';
     renderWishes();
     toast('Đã gửi lời chúc 💖');
+    beep(1046, 0.09, 'sine');
+    setTimeout(() => beep(1318, 0.12, 'sine'), 90);
     const r = $('wishSend').getBoundingClientRect();
     burstAt(r.left, r.top, 25);
   });
   $('wishText').addEventListener('keydown', e => { if (e.key === 'Enter') $('wishSend').click(); });
   renderWishes();
 
-  /* ================== MUSIC PLAYER (OPTIMIZED) ================== */
+  /* ================== MUSIC PLAYER (FIXED) ================== */
   const audio = $('bgAudio');
-  let songs = isBirthdayToday() ? BIRTHDAY_SONGS.slice() : REGULAR_SONGS.slice();
+  let songs = (isBirthdayToday() ? BIRTHDAY_SONGS : REGULAR_SONGS).slice();
   let currentIdx = Math.floor(Math.random() * songs.length);
   let shuffle = false;
-  let userVolume = parseFloat(localStorage.getItem('dgb_volume')) || 0.7;
-  const prefetchCache = new Set();
-  let preloader = null;
-
+  let userVolume = parseFloat(localStorage.getItem('dgb_volume'));
+  if (isNaN(userVolume) || userVolume < 0 || userVolume > 1) userVolume = 0.7;
   audio.volume = userVolume;
   $('volSlider').value = userVolume;
 
-  // Prefetch hint via <link rel="prefetch"> — browser sẽ tải trước vào cache
-  function prefetchURL(url){
-    if (!url || prefetchCache.has(url)) return;
+  // Warm-up bài kế: dùng Audio() riêng biệt, KHÔNG có crossorigin
+  let warmupAudio = null;
+  let warmupDone = false;
+
+  function warmupNext(){
     try {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.as = 'audio';
-      link.href = url;
-      link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
-      prefetchCache.add(url);
-    } catch(e){}
+      if (warmupAudio) { warmupAudio.src = ''; warmupAudio.load(); }
+      const nextIdx = (currentIdx + 1) % songs.length;
+      const url = songs[nextIdx] && songs[nextIdx].url;
+      if (!url) return;
+      warmupAudio = new Audio();
+      warmupAudio.preload = 'auto';
+      // KHÔNG set crossorigin — tránh CORS mode conflict
+      warmupAudio.src = url;
+      // Không cần .load() — set src là đủ
+    } catch(e){ /* silent */ }
   }
 
-  // Preload bằng Audio() ẩn — buffer sẵn sàng cho lần next tới
-  function preloadTrack(url){
-    if (preloader){
-      try { preloader.src = ''; preloader.load(); } catch(e){}
-      preloader = null;
-    }
-    if (!url) return;
-    preloader = new Audio();
-    preloader.preload = 'auto';
-    preloader.crossOrigin = 'anonymous';
-    preloader.src = url;
-    preloader.load();
+  function setPlayState(state){
+    // state: 'play' | 'pause' | 'loading' | 'error'
+    const btn = $('playBtn');
+    btn.classList.toggle('loading', state === 'loading');
+    btn.classList.toggle('error', state === 'error');
+    if (state === 'loading') btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    else if (state === 'error') btn.innerHTML = '<i class="fas fa-triangle-exclamation"></i>';
+    else if (state === 'play') btn.innerHTML = '<i class="fas fa-pause"></i>';
+    else btn.innerHTML = '<i class="fas fa-play"></i>';
   }
 
-  function setPlayIcon(playing){
-    const btn = $('playBtn');
-    if (btn.classList.contains('loading')) return;
-    btn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+  let loadingTimer = null;
+  function beginLoading(){
+    clearTimeout(loadingTimer);
+    setPlayState('loading');
+    // Fallback: nếu 8s không có tín hiệu gì, thoát khỏi loading
+    loadingTimer = setTimeout(() => {
+      if (!audio.paused) setPlayState('play');
+      else setPlayState('pause');
+    }, 8000);
   }
-  function setLoading(on){
-    const btn = $('playBtn');
-    btn.classList.toggle('loading', on);
-    if (on) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    else setPlayIcon(!audio.paused);
+  function endLoading(){
+    clearTimeout(loadingTimer);
+    if (audio.paused) setPlayState('pause');
+    else setPlayState('play');
   }
 
   function loadSong(idx, autoplay){
-    currentIdx = (idx + songs.length) % songs.length;
+    currentIdx = ((idx % songs.length) + songs.length) % songs.length;
     const song = songs[currentIdx];
 
     $('seekFill').style.width = '0%';
@@ -701,36 +680,52 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     $('durTime').textContent = '0:00';
     $('songTitle').textContent = song.title;
 
+    warmupDone = false;
+
     audio.src = song.url;
-    audio.load();
+    // KHÔNG gọi audio.load() — chỉ set src là đủ và an toàn hơn
+    // (audio.load() có thể abort stream đang có)
 
     if (autoplay){
+      beginLoading();
       const p = audio.play();
-      if (p && p.catch) p.catch(err => {
-        if (err.name !== 'AbortError' && err.name !== 'NotAllowedError'){
-          toast('Không thể phát nhạc 😢');
-        }
-      });
+      if (p && p.catch){
+        p.catch(err => {
+          if (err.name === 'AbortError') return;           // do load khác
+          if (err.name === 'NotAllowedError'){             // autoplay policy
+            setPlayState('pause');
+            toast('Nhấn ▶ để bắt đầu phát nhạc');
+            return;
+          }
+          console.warn('[play error]', err.name, err.message);
+          setPlayState('error');
+          toast('Không phát được, chuyển bài khác...');
+          setTimeout(() => { if (songs.length > 1) loadSong(currentIdx + 1, true); }, 900);
+        });
+      }
+    } else {
+      setPlayState('pause');
     }
-
-    // Preload bài kế sau 1.5s (tránh tranh băng thông với bài hiện tại)
-    const nextIdx = (currentIdx + 1) % songs.length;
-    setTimeout(() => {
-      prefetchURL(songs[nextIdx].url);
-      preloadTrack(songs[nextIdx].url);
-    }, 1500);
   }
 
-  /* audio events */
-  audio.addEventListener('loadstart', () => setLoading(true));
-  audio.addEventListener('waiting', () => setLoading(true));
-  audio.addEventListener('stalled', () => setLoading(true));
-  audio.addEventListener('canplay', () => setLoading(false));
-  audio.addEventListener('canplaythrough', () => setLoading(false));
-  audio.addEventListener('playing', () => setLoading(false));
-  audio.addEventListener('play', () => setPlayIcon(true));
-  audio.addEventListener('pause', () => setPlayIcon(false));
-  audio.addEventListener('error', () => { setLoading(false); toast('Lỗi tải nhạc, thử bài khác nhé'); });
+  /* ---- Audio events ---- */
+  audio.addEventListener('loadstart', beginLoading);
+  audio.addEventListener('waiting',   beginLoading);
+  audio.addEventListener('stalled',   beginLoading);
+
+  audio.addEventListener('canplay',        endLoading);
+  audio.addEventListener('canplaythrough', endLoading);
+  audio.addEventListener('playing', () => {
+    endLoading();
+    // Warm-up bài kế 5s sau khi bài hiện tại đã chạy ổn
+    if (!warmupDone){
+      warmupDone = true;
+      setTimeout(warmupNext, 5000);
+    }
+  });
+
+  audio.addEventListener('play',  () => setPlayState('play'));
+  audio.addEventListener('pause', () => setPlayState('pause'));
   audio.addEventListener('ended', () => {
     if (shuffle) loadSong(Math.floor(Math.random() * songs.length), true);
     else loadSong(currentIdx + 1, true);
@@ -738,8 +733,19 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   audio.addEventListener('loadedmetadata', () => {
     $('durTime').textContent = fmtTime(audio.duration);
   });
+  audio.addEventListener('error', () => {
+    const e = audio.error;
+    console.warn('[audio error]', e && e.code, e && e.message);
+    clearTimeout(loadingTimer);
+    setPlayState('error');
+    toast('Lỗi tải bài, chuyển bài khác...');
+    setTimeout(() => {
+      if (songs.length > 1) loadSong(currentIdx + 1, true);
+      else setPlayState('pause');
+    }, 900);
+  });
 
-  /* Throttle timeupdate bằng RAF — mượt, không spam DOM */
+  /* Throttle timeupdate bằng RAF */
   let seekRaf = null;
   audio.addEventListener('timeupdate', () => {
     if (seekRaf) return;
@@ -747,23 +753,34 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       seekRaf = null;
       $('curTime').textContent = fmtTime(audio.currentTime);
       if (audio.duration){
-        const pct = (audio.currentTime / audio.duration) * 100;
-        $('seekFill').style.width = pct + '%';
+        $('seekFill').style.width = ((audio.currentTime / audio.duration) * 100) + '%';
       }
     });
   });
 
-  /* controls */
+  /* ---- Controls ---- */
   $('playBtn').addEventListener('click', () => {
     if (audio.paused){
-      audio.play().catch(() => toast('Không thể phát nhạc 😢'));
+      if (!audio.src){
+        loadSong(currentIdx, true);
+        return;
+      }
+      beginLoading();
+      const p = audio.play();
+      if (p && p.catch) p.catch(err => {
+        if (err.name === 'NotAllowedError'){
+          endLoading();
+          return;
+        }
+        endLoading();
+        console.warn('[play error]', err);
+      });
     } else {
       audio.pause();
     }
   });
   $('nextBtn').addEventListener('click', () => {
-    if (shuffle) loadSong(Math.floor(Math.random() * songs.length), true);
-    else loadSong(currentIdx + 1, true);
+    loadSong(shuffle ? Math.floor(Math.random() * songs.length) : currentIdx + 1, true);
   });
   $('prevBtn').addEventListener('click', () => {
     if (audio.currentTime > 3){ audio.currentTime = 0; return; }
@@ -777,15 +794,16 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     toast(shuffle ? 'Bật phát ngẫu nhiên 🔀' : 'Tắt phát ngẫu nhiên');
   });
 
-  /* seek */
+  /* Seek */
   const seekBar = $('seekBar');
-  seekBar.addEventListener('click', e => {
+  function doSeek(clientX){
     const rect = seekBar.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    if (audio.duration) audio.currentTime = pct * audio.duration;
-  });
+    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    if (audio.duration && isFinite(audio.duration)) audio.currentTime = pct * audio.duration;
+  }
+  seekBar.addEventListener('click', e => doSeek(e.clientX));
 
-  /* volume */
+  /* Volume */
   $('volSlider').addEventListener('input', e => {
     userVolume = parseFloat(e.target.value);
     audio.volume = userVolume;
@@ -809,6 +827,7 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
     }
   });
 
+  /* Load metadata ban đầu — chỉ load metadata, chưa phát */
   loadSong(currentIdx, false);
 
   /* ================== ACTION BUTTONS ================== */
@@ -825,29 +844,36 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
       stopConfetti();
       toast('Tắt confetti');
     }
+    beep(confettiOn ? 880 : 440, 0.08);
   });
+
   $('burstBtn').addEventListener('click', () => {
     const cx = W / 2, cy = H / 2;
     for (let i = 0; i < 3; i++){
-      setTimeout(() => burstAt(cx + rand(-150, 150), cy + rand(-80, 40), 50), i * 140);
+      setTimeout(() => {
+        burstAt(cx + rand(-150, 150), cy + rand(-80, 40), 50);
+        beep(660 + i * 220, 0.08, 'triangle');
+      }, i * 140);
     }
     toast('Bắn pháo hoa! 🎆');
   });
+
   $('musicBirthdayBtn').addEventListener('click', () => {
+    const wasPlaying = !audio.paused;
     songs = BIRTHDAY_SONGS.slice();
     currentIdx = 0;
-    loadSong(0, true);
+    loadSong(0, wasPlaying || true);
     toast('Đang phát nhạc sinh nhật 🎂');
   });
 
   /* ================== TOP ACTIONS ================== */
-  let soundFxOn = true;
   $('soundToggle').addEventListener('click', () => {
-    soundFxOn = !soundFxOn;
-    $('soundToggle').innerHTML = soundFxOn
-      ? '<i class="fas fa-volume-high"></i>'
-      : '<i class="fas fa-volume-xmark"></i>';
-    toast(soundFxOn ? 'Bật âm thanh tương tác' : 'Tắt âm thanh tương tác');
+    sfxOn = !sfxOn;
+    const b = $('soundToggle');
+    b.innerHTML = sfxOn ? '<i class="fas fa-volume-high"></i>' : '<i class="fas fa-volume-xmark"></i>';
+    b.classList.toggle('off', !sfxOn);
+    toast(sfxOn ? 'Bật âm thanh tương tác' : 'Tắt âm thanh tương tác');
+    if (sfxOn) beep(880, 0.08);
   });
 
   $('shareBtn').addEventListener('click', async () => {
@@ -863,12 +889,12 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
         await navigator.clipboard.writeText(location.href);
         toast('Đã sao chép link chia sẻ 🔗');
       }
-    } catch(e){ toast('Không thể chia sẻ'); }
+    } catch(e){ /* user cancel */ }
   });
 
   /* ================== CLICK ANYWHERE = BURST ================== */
   document.addEventListener('click', e => {
-    if (e.target.closest('button,input,a,.player,.wish-box,.gift')) return;
+    if (e.target.closest('button,input,a,.player,.wish-box,.gift,.top-controls')) return;
     burstAt(e.clientX, e.clientY, 25);
   });
 
@@ -882,14 +908,14 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   });
 
   /* ================== INIT ================== */
+  let countdownInterval = null;
   function init(){
     resizeCanvas();
     initParticles(isBirthdayToday() ? 180 : 120);
     startConfetti();
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    countdownInterval = setInterval(updateCountdown, 1000);
 
-    // Birthday-day bonus confetti bursts
     if (isBirthdayToday()){
       let i = 0;
       const iv = setInterval(() => {
@@ -900,14 +926,16 @@ footer i{color:var(--pink);animation:heartBeat 1.4s infinite}
   }
   init();
 
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      resizeCanvas();
-      if (particles.length < 80) initParticles(120);
-    }, 150);
+  window.addEventListener('pagehide', () => {
+    if (countdownInterval) clearInterval(countdownInterval);
+    if (warmupAudio){ try { warmupAudio.src = ''; } catch(e){} warmupAudio = null; }
   });
+
+  const onResize = debounce(() => {
+    resizeCanvas();
+    if (particles.length < 80) initParticles(120);
+  }, 200);
+  window.addEventListener('resize', onResize);
 
 })();
 </script>
