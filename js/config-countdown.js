@@ -9,7 +9,7 @@ const CONFIG = {
 const GOOGLE_SHEET_WEBAPP_URL = "";
 
 // 5 bài nhạc chill hằng ngày (offline local + online fallback)
-const REGULAR_SONGS = [
+var REGULAR_SONGS = [
   {
     url: "./bai-nay-chill-phet.mp3",
     fallback: "https://github.com/baobao247/2405/raw/refs/heads/main/B%C3%A0i%20N%C3%A0y%20Chill%20Ph%E1%BA%BFt%20-%20%C4%90en.mp3",
@@ -37,8 +37,13 @@ const REGULAR_SONGS = [
   }
 ];
 
+if (typeof window !== 'undefined') {
+  window.REGULAR_SONGS = REGULAR_SONGS;
+  window.BIRTHDAY_SONGS = BIRTHDAY_SONGS;
+}
+
 // 3 bài nhạc đặc biệt ngày sinh nhật
-const BIRTHDAY_SONGS = [
+var BIRTHDAY_SONGS = [
   {
     url: "./happy-birthday-to-you.mp3",
     fallback: "https://github.com/baobao247/2405/raw/refs/heads/main/Happy%20Birthday%20To%20You%20-%20AMEE.mp3",
@@ -55,6 +60,11 @@ const BIRTHDAY_SONGS = [
     title: "SINH NHẬT — HIEUTHUHAI"
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.REGULAR_SONGS = REGULAR_SONGS;
+  window.BIRTHDAY_SONGS = BIRTHDAY_SONGS;
+}
 
 const $ = id => document.getElementById(id);
 const rand = (min, max) => Math.random() * (max - min) + min;

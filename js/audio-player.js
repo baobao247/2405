@@ -1,6 +1,8 @@
 /* ================== FLOATING MUSIC PLAYER ================== */
 const audio = $('bgAudio');
-let songs = (isBirthdayToday() ? BIRTHDAY_SONGS : REGULAR_SONGS).slice();
+const _bdayList = typeof BIRTHDAY_SONGS !== 'undefined' ? BIRTHDAY_SONGS : (typeof window !== 'undefined' && window.BIRTHDAY_SONGS ? window.BIRTHDAY_SONGS : []);
+const _regList = typeof REGULAR_SONGS !== 'undefined' ? REGULAR_SONGS : (typeof window !== 'undefined' && window.REGULAR_SONGS ? window.REGULAR_SONGS : []);
+let songs = ((typeof isBirthdayToday === 'function' && isBirthdayToday()) ? _bdayList : _regList).slice();
 let currentIdx = 0, isShuffle = false;
 
 function updatePlayBtn(){

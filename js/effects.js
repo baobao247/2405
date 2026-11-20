@@ -57,8 +57,15 @@ if ($('soundToggle')) {
   }
 })();
 
-const canvas = $('confetti-canvas'), ctx = canvas ? canvas.getContext('2d') : null;
-let W = 0, H = 0, particles = [], rafId = null;
+var canvas = $('confetti-canvas'), ctx = canvas ? canvas.getContext('2d') : null;
+var W = 0, H = 0, particles = [], rafId = null;
+
+if (typeof globalThis !== 'undefined') {
+  globalThis.canvas = canvas;
+  globalThis.ctx = ctx;
+  globalThis.particles = particles;
+  globalThis.rafId = rafId;
+}
 
 function resizeCanvas(){
   if (!canvas) return;
@@ -66,18 +73,18 @@ function resizeCanvas(){
   H = canvas.height = window.innerHeight;
 }
 
-const SHAPES = ['rect','circle','heart','star'];
 function makeParticle(x, y, burst = false){
+  const shapes = ['rect','circle','heart','star'];
   return {
-    x: x !== undefined ? x : Math.random() * W,
-    y: y !== undefined ? y : (burst ? H + 10 : Math.random() * H - H),
+    x: x !== undefined ? x : Math.random() * (W || 800),
+    y: y !== undefined ? y : (burst ? (H || 600) + 10 : Math.random() * (H || 600) - (H || 600)),
     vx: rand(-2, 2) + (burst ? rand(-7, 7) : 0),
     vy: burst ? rand(-16, -7) : rand(2, 5),
     size: rand(5, 12),
     color: `hsl(${rand(0, 360)}, 85%, 62%)`,
     rot: rand(0, Math.PI * 2),
     rotSpd: rand(-0.08, 0.08),
-    shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+    shape: shapes[Math.floor(Math.random() * shapes.length)],
     life: burst ? rand(70, 130) : Infinity
   };
 }

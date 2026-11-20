@@ -154,7 +154,8 @@ document.addEventListener('click', e => {
 /* ================== INIT ENGINE ================== */
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
-for (let i = 0; i < (isBirthdayToday() ? 150 : 80); i++) particles.push(makeParticle());
+const pList = typeof particles !== 'undefined' ? particles : (window.particles || []);
+for (let i = 0; i < (isBirthdayToday() ? 150 : 80); i++) pList.push(makeParticle());
 rafId = requestAnimationFrame(stepConfetti);
 
 updateTimer();
